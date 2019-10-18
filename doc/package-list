@@ -1,0 +1,15 @@
+app
+app.exceptions
+backend
+backend.blockpackage
+backend.calculus
+backend.datapackage
+backend.datapackage.dataparsing
+backend.formpackage
+backend.parsing
+frontend
+frontend.containers
+frontend.containers.topBox
+frontend.containers.topBox.cmenus
+frontend.dialogues
+frontend.objects
