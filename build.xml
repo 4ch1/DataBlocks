@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="JavaFX Hello World Example" default="compile"
+         xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    
+   <property environment="env"/>
+  <property name="JAVA_HOME" value="${env.JAVA_HOME}"/>
+  <property name="build.src.dir" value="${basedir}/src/"/>
+  <property name="build.classes.dir" value="${basedir}/build/"/>
+  <property name="build.dist.dir" value="${basedir}/dest-client/"/>
+
+  <path id="library.json-20180130.classpath">
+    <pathelement location="${basedir}/lib/json-20180130.jar"/>
+  </path>
+
+    <path id="blockeditor.module.production.classpath">
+        <path refid="library.json-20180130.classpath"/>
+    </path>
+
+    <target name="compile" depends="clean,compilesrc">
+
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+             uri="javafx:com.sun.javafx.tools.ant"
+             classpath="${JAVA_HOME}/lib/ant-javafx.jar"/>
+
+    <fx:application id="BE_ID"
+                    name="BlockEditor"
+                    mainClass="app.Main"/>
+
+    <fx:resources id="appRes">
+      <fx:fileset dir="${build.dist.dir}" includes="ija-client.jar"/>
+    </fx:resources>
+
+    <fx:jar destfile="${build.dist.dir}/ija-client.jar">
+      <fx:application refid="BE_ID"/>
+      <fx:resources refid="appRes"/>
+      <fileset dir="${build.classes.dir}"/>
+    </fx:jar>
+        <javadoc sourcepath="${build.src.dir}" destdir="${basedir}/doc/">
+        <classpath>
+            <fileset dir="${basedir}/lib/">
+                <include name="org.json.jar"/>
+            </fileset>
+        </classpath>
+    </javadoc>
+
+  </target>
+
+  <target name="clean">
+    <mkdir dir="${build.classes.dir}"/>
+    <mkdir dir="${build.dist.dir}"/>
+
+    <delete>
+      <fileset dir="${build.classes.dir}" includes="**/*"/>
+      <fileset dir="${build.dist.dir}" includes="**/*"/>
+    </delete>
+
+  </target>
+
+
+    <target name="compilesrc" depends="clean">
+
+    <javac includeantruntime="false"
+           srcdir="${build.src.dir}"
+           destdir="${build.classes.dir}"
+           fork="yes"
+           executable="${JAVA_HOME}/bin/javac"
+           source="8"
+           debug="off">
+        <classpath refid="blockeditor.module.production.classpath"/>
+
+    </javac>
+  </target>
+
+  <target name="run" depends="compile" >
+    <exec executable="java">
+      <arg line="-jar ${build.dist.dir}/ija-client.jar"/>
+    </exec>
+  </target>
+
+</project>
